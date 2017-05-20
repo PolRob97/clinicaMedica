@@ -19,9 +19,10 @@ public class Clinica implements Interfaccia{
 	private final static String LISTA_PAZIENTI_INFO = "La lista dei pazienti presenti in clinica:";
 	private final static String LISTA_MEDICI_INFO = "La lista dei medici presenti in clinica:";
 	
-	public Clinica(String nomeClinica, Vector <Paziente> listaPazienti){
+	public Clinica(String nomeClinica, Vector <Paziente> listaPazienti, Vector<Medico> listaMedici){
 		this.nomeClinica = nomeClinica;
 		this.listaPazienti = listaPazienti;
+		this.listaMedici = listaMedici;
 	}
 	
 	/**
@@ -40,6 +41,11 @@ public class Clinica implements Interfaccia{
 	 */
 	
 	public Medico cercaMedico(int ID){
+		for(Medico medico : listaMedici){
+			if(medico.getID() == ID){
+				return medico;
+			}
+		}
 		return null;
 	}
 	
@@ -73,6 +79,7 @@ public class Clinica implements Interfaccia{
 	 */
 	
 	public Vector<LocalDateTime> stampaOrariMedici(){
+		
 		return null;
 	}
 
@@ -97,7 +104,7 @@ public class Clinica implements Interfaccia{
 		sb.append(LISTA_MEDICI_INFO).append("\n");
 		
 		for(Medico medico : listaMedici){
-			sb.append(medico.toString() + "\n"); //da implementare toString di Medico
+			sb.append(medico.toString() + "\n");
 		}
 		return sb.toString();
 	}
@@ -110,7 +117,11 @@ public class Clinica implements Interfaccia{
 	
 	@Override
 	public TreeMap<Integer, Vector<LocalDateTime>> stampaOrari(Medico m) {
-		// TODO Auto-generated method stub
+		for(Medico medico : listaMedici){
+			if(m.equals(medico)){
+				return m.getOrariFissi();
+			}
+		}
 		return null;
 	}
 	
@@ -122,7 +133,11 @@ public class Clinica implements Interfaccia{
 	
 	@Override
 	public TreeMap<Integer, Vector<LocalDateTime>> stampaAppuntamenti(int ID) {
-		// TODO Auto-generated method stub
+		for(Medico medico: listaMedici)
+			if(medico.getID() == ID){
+				medico.getOrarioAppuntamenti();
+			}
+		
 		return null;
 	}
 

@@ -4,16 +4,20 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 public class Medico {
-	private static final String MD_OCCUPATO = "Il medico "+nome+" è occupato in tale occasione";//adesso lo sistemo
 	private String nome;
+	private final String MD_OCCUPATO = "Il medico "+ nome +" ï¿½ occupato in tale occasione";//adesso lo sistemo
 	private String cognome;
 	private int ID;
 	private LocalDate annoLaurea;
 	private LocalDate annoAssunzione;
 	private Vector<Appuntamento> appuntamenti;
 	private TreeMap<Integer, Vector<Appuntamento>> orariAppuntamenti;
-	private Vector<LocalDateTime> fissi;
+	//private Vector<LocalDateTime> fissi;
 	private TreeMap<Integer, Vector<LocalDateTime>> orariFissi;
+	
+	public Medico(){
+		
+	}
 	
 	public Medico(String nome, String cognome, LocalDate annoLaurea, LocalDate annoAssunzione){
 		this.nome = nome;
@@ -22,7 +26,7 @@ public class Medico {
 		this.annoAssunzione = annoAssunzione;
 		this.appuntamenti = new Vector<>();
 		this.orariAppuntamenti = new TreeMap<Integer, Vector<Appuntamento>>();
-		this.fissi = new Vector<>();
+		//this.fissi = new Vector<>();
 		this.orariFissi = new TreeMap<Integer, Vector<LocalDateTime>>();
 	}
 	
@@ -79,4 +83,16 @@ public class Medico {
 		desc_medico.append("Nome: "+nome+"\nCognome: "+cognome+"\nID: "+ID+"\nAnno laurea: "+annoLaurea+"\nAnno assunzione: "+annoAssunzione);
 		return desc_medico.toString();
 	}
+
+	public boolean equals(Medico medico) {
+		if(medico == null)
+			return false;
+		if(this == medico)
+			return true;
+		if(ID == medico.ID && nome.equals(medico.nome) && cognome.equals(medico.cognome))
+			return true;
+		return false;
+	}
+	
+	
 }

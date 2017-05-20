@@ -4,13 +4,13 @@ public class Appuntamento {
 	private static final String INIZIO = "Inizio appuntamento: ";
 	private static final String FINE = "Fine appuntamento: ";
 	private static final String URGENZA = "Livello urgenza: ";
-	private enum urgenza {
+	private enum Urgenza {
 		ROSSO,
 		GIALLO,
 		NERO,
 		MARRONE,
 	}
-	private urgenza urgenza;
+	private Urgenza urgenza;
 	private LocalDateTime inizio;
 	private LocalDateTime fine;
 	
@@ -22,7 +22,7 @@ public class Appuntamento {
 		return fine;
 	}
 	
-	public urgenza getUrgenza(){
+	public Urgenza getUrgenza(){
 		return urgenza;
 	}
 	

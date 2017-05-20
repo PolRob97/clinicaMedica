@@ -5,7 +5,11 @@ public class Paziente {
 	private String nome;
     private String cognome;
     private Vector<Appuntamento> storiaAppuntamenti;
-     
+    
+    public Paziente (){
+	
+    }
+    
     public Paziente(String nome, String cognome){
     	this.nome = nome;
     	this.cognome = cognome;

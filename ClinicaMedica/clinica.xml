@@ -1,0 +1,44 @@
+<clinicaMedica>
+	<medici>
+		<medico>
+			<nomeMedico> Andrea </nomeMedico>
+			<cognomeMedico> Rossi </cognomeMedico>
+			<id> 001 </id>
+			<annoLaurea> 1997 </annoLaurea>
+			<annoAssunzione> 1998 </annoAssunzione>
+		</medico>
+		
+		<medico>
+                        <nomeMedico> Gregory </nomeMedico>
+                        <cognomeMedico> House </cognomeMedico>
+                        <id> 002 </id>
+                        <annoLaurea> 1972 </annoLaurea>
+                        <annoAssunzione> 1974 </annoAssunzione>
+                </medico>
+		
+		<medico>
+                        <nomeMedico> Allison </nomeMedico>
+                        <cognomeMedico> Cameron </cognomeMedico>
+                        <id> 003 </id>
+                        <annoLaurea> 1989 </annoLaurea>
+                        <annoAssunzione> 1990 </annoAssunzione>
+                </medico>
+	</medici>
+
+	<pazienti>
+		<paziente>
+			<nomePaziente> Roberto </nomePaziente>
+			<cognomePaziente> Poletti </cognomePaziente>
+		</paziente>
+
+		<paziente>
+                        <nomePaziente> Yassin </nomePaziente>
+                        <cognomePaziente> Mahjoubi </cognomePaziente>
+                </paziente>
+		
+		<paziente>
+                        <nomePaziente> Thomas </nomePaziente>
+                        <cognomePaziente> Labate </cognomePaziente>
+                </paziente>
+	</pazienti>
+</clinicaMedica>
