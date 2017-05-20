@@ -6,7 +6,11 @@ public class Paziente {
     private String cognome;
     private Vector<Appuntamento> storiaAppuntamenti;
      
-     
+    public Paziente(String nome, String cognome){
+    	this.nome = nome;
+    	this.cognome = cognome;
+    }
+    
     public String getNome(){
         return nome;
     }
@@ -32,6 +36,6 @@ public class Paziente {
     }
     
     public String toString(){
-    	return "Nome: " + nome + " Cognome: " + cognome;
+    	return String.join(",", "Nome: " + nome, " Cognome: " + cognome );
     }
 }

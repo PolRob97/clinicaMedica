@@ -16,8 +16,12 @@ public class Clinica implements Interfaccia{
 	private Vector<Medico> listaMedici;
 	private Vector<Paziente> listaPazienti;
 	
-	public Clinica(){
-		
+	private final static String LISTA_PAZIENTI_INFO = "La lista dei pazienti presenti in clinica:";
+	private final static String LISTA_MEDICI_INFO = "La lista dei medici presenti in clinica:";
+	
+	public Clinica(String nomeClinica, Vector <Paziente> listaPazienti){
+		this.nomeClinica = nomeClinica;
+		this.listaPazienti = listaPazienti;
 	}
 	
 	/**
@@ -79,7 +83,7 @@ public class Clinica implements Interfaccia{
 	 */
 	
 	public String toString(){
-		return null;
+		return String.join("\n", nomeClinica, stampaPazienti());
 	}
 	
 	/**
@@ -89,8 +93,13 @@ public class Clinica implements Interfaccia{
 	
 	@Override
 	public String stampaMedici() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append(LISTA_MEDICI_INFO).append("\n");
+		
+		for(Medico medico : listaMedici){
+			sb.append(medico.toString() + "\n"); //da implementare toString di Medico
+		}
+		return sb.toString();
 	}
 	
 	/**
@@ -125,8 +134,12 @@ public class Clinica implements Interfaccia{
 	
 	@Override
 	public String stampaPazienti() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append(LISTA_PAZIENTI_INFO).append("\n");
+		for(Paziente paziente : listaPazienti){
+			sb.append(paziente.toString() + "\n");
+		}
+		return sb.toString();
 	}
 
 	/**
