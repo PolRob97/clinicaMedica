@@ -1,5 +1,9 @@
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -18,11 +22,15 @@ public class Clinica implements Interfaccia{
 	
 	private final static String LISTA_PAZIENTI_INFO = "La lista dei pazienti presenti in clinica:";
 	private final static String LISTA_MEDICI_INFO = "La lista dei medici presenti in clinica:";
+	private final static String INITIAL_TIME = "Tempo iniziale: ";
+	private final static String DELAY_INFO = "Il delay dal tempo %d al tempo %d è: ";
+	private final static String APPOINTMENT_DOCTOR = "Il numero di appuntamenti del medico %s sono %d: ";
 	
 	public Clinica(String nomeClinica, Vector <Paziente> listaPazienti, Vector<Medico> listaMedici){
 		this.nomeClinica = nomeClinica;
 		this.listaPazienti = listaPazienti;
 		this.listaMedici = listaMedici;
+		tempi = new Vector<>();
 	}
 	
 	/**
@@ -59,8 +67,9 @@ public class Clinica implements Interfaccia{
 	 * @return Vero se c'è la disponibilità da parte del medico, falso altrimenti
 	 */
 	
-	/*public boolean controllaAppuntamento(Medico m, LocalDateTime inizio, LocalDateTime fine){
+	public boolean controllaAppuntamento(Medico m, Appuntamento ap){
 		boolean isDoctorExists = false;
+		
 		for(Medico medico : listaMedici){
 			if(medico.equals(m)){
 				isDoctorExists = true;
@@ -70,27 +79,20 @@ public class Clinica implements Interfaccia{
 		
 		if(!isDoctorExists)
 			return false;
-		Vector<Appuntamento> listaAppuntamentiMedico = m.getOrarioAppuntamenti()
-				.get(inizio.getYear() + inizio.getMonth().getValue() + inizio.getDayOfMonth());
+		
+		Vector<Appuntamento> listaAppuntamentiMedico = m.getOrariAppuntamenti()
+				.get(ap.getInizio().getYear() + ap.getInizio().getMonth().getValue() + ap.getInizio().getDayOfMonth());
 		
 		for(Appuntamento appuntamento : listaAppuntamentiMedico){
-			if(Util.checkifOccupied(appuntamento.getInizio(), appuntamento.getFine(), inizio, fine)){
-				System.out.println("Occupato!");
-				return false;
+			if(ap.getInizio().isBefore(appuntamento.getInizio()) && ap.getFine().isBefore(appuntamento.getInizio())
+					|| ap.getInizio().isAfter(appuntamento.getFine()) && ap.getFine().isAfter(appuntamento.getFine())){
+				System.out.println("Libero!");
+				m.getOrariAppuntamenti().get(ap.getInizio().getYear() + ap.getInizio().getMonthValue() + ap.getInizio().getDayOfMonth()).add(ap);
+				return true;
 			}
 		} 
 		
-		return true;
-	}*/
-	
-	/**
-	 * Metodo che restituisce tutti gli appuntamenti di un dato giorno.
-	 * @param data Data per il filtro degli appuntamenti.
-	 * @return Lista degli appuntamenti filtrati
-	 */
-	
-	public Vector<Appuntamento> stampaAppuntamentiDatoGiorno(LocalDateTime data){
-		return null;
+		return false;
 	}
 	
 	/**
@@ -99,8 +101,17 @@ public class Clinica implements Interfaccia{
 	 */
 	
 	public Vector<LocalDateTime> stampaOrariMedici(){
-		
-		return null;
+		Vector<LocalDateTime> orariTotali = new Vector<LocalDateTime>();
+		for(Medico medico: listaMedici){
+			Iterator<Vector<LocalDateTime>> iterator = medico.getOrariFissi().values().iterator();
+			while(iterator.hasNext()){
+				for(LocalDateTime data: iterator.next()){
+					orariTotali.add(data);
+				}
+			}
+			
+		}
+		return orariTotali;
 	}
 
 	
@@ -152,10 +163,10 @@ public class Clinica implements Interfaccia{
 	 */
 	
 	@Override
-	public TreeMap<Integer, Vector<LocalDateTime>> stampaAppuntamenti(int ID) {
+	public TreeMap<Integer, Vector<Appuntamento>> stampaAppuntamenti(int ID) {
 		for(Medico medico: listaMedici)
 			if(medico.getID() == ID){
-				medico.getOrarioAppuntamenti();
+				return medico.getOrariAppuntamenti();
 			}
 		
 		return null;
@@ -177,11 +188,6 @@ public class Clinica implements Interfaccia{
 		return sb.toString();
 	}
 
-	/**
-	 * Metodo che permette di stampare il numero di appuntamenti in clinica presenti in
-	 * un certo intervallo di tempo.
-	 * @return Numero di appuntamenti 
-	 */
 	
 	/**
 	 * Metodo che permette di stampare il delay tra un'attività della clinica e l'altra.
@@ -191,19 +197,54 @@ public class Clinica implements Interfaccia{
 	
 	@Override
 	public void getTime() {
-		// TODO Auto-generated method stub
-		
+		tempi.add(Double.longBitsToDouble(Instant.now().toEpochMilli()));
+		for(int i = 0; i < tempi.size(); i++){
+			if(i == 0){
+				System.out.println(INITIAL_TIME + tempi.get(i));
+			}else{
+				System.out.printf(DELAY_INFO + (tempi.get(i-1) - tempi.get(i)) + "\n", i-1, i);
+			}
+		}
 	}
 
+	/**
+	 * Metodo che permette di stampare il numero di appuntamenti in clinica presenti in
+	 * un certo intervallo di tempo.
+	 * @return Numero di appuntamenti 
+	 */
+	
 	@Override
-	public Vector<Appuntamento> stampaAppuntamenti(LocalDate inizio, LocalDate fine) {
-		// TODO Auto-generated method stub
-		return null;
+	public Vector<Appuntamento> stampaAppuntamenti(LocalDateTime inizio, LocalDateTime fine) {
+		Vector<Appuntamento> listaAppuntamenti = new Vector<Appuntamento>();
+		for(Paziente paziente : listaPazienti){
+			for(Appuntamento appuntamento : paziente.getStoriaAppuntamenti()){
+				if(appuntamento.getInizio().isAfter(inizio) && appuntamento.getFine().isBefore(fine)){
+					listaAppuntamenti.add(appuntamento);
+				}
+			}
+		}
+		return listaAppuntamenti;
 	}
-
+	
+	/**
+	 * Metodo che permette di stampare il numero totale degli appuntamenti di un medico
+	 * data la sua matricola.
+	 * @return Numero di appuntamenti totali
+	 */
+	
 	@Override
 	public String stampaNumAppuntamenti(int matricola) {
-		// TODO Auto-generated method stub
-		return null;
+		int numeroAppuntamenti = 0;
+		String cognomeMedico = "";
+		for(Medico medico : listaMedici){
+			if(medico.getID() == matricola){
+				cognomeMedico = medico.getCognome();
+				Iterator<Vector<Appuntamento>> it = medico.getOrariAppuntamenti().values().iterator();
+				while(it.hasNext()){
+					numeroAppuntamenti += it.next().size();
+				}
+			}
+		}
+		return String.format(APPOINTMENT_DOCTOR, cognomeMedico, numeroAppuntamenti);
 	}
 }

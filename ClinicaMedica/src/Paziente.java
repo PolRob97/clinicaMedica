@@ -86,7 +86,8 @@ public class Paziente {
      */
     
     public void prendiAppuntamento(Clinica clinica, Medico medico, Appuntamento appuntamento){
-    	//clinica.controllaAppuntamento(medico, appuntamento.getInizio(), appuntamento.getFine());
+    	if(clinica.controllaAppuntamento(medico, appuntamento))
+    		storiaAppuntamenti.add(appuntamento);
     }
     
     /**
