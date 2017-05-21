@@ -183,12 +183,6 @@ public class Clinica implements Interfaccia{
 	 * @return Numero di appuntamenti 
 	 */
 	
-	@Override
-	public Vector<Appuntamento> stampaNumAppuntamenti(LocalDate inizio, LocalDate fine) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	/**
 	 * Metodo che permette di stampare il delay tra un'attività della clinica e l'altra.
 	 * Deve tenere informato l'utente anche delle attività precedenti effettuate e 
@@ -199,5 +193,17 @@ public class Clinica implements Interfaccia{
 	public void getTime() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Vector<Appuntamento> stampaAppuntamenti(LocalDate inizio, LocalDate fine) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String stampaNumAppuntamenti(int matricola) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

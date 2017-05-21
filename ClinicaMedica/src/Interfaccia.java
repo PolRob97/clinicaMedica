@@ -8,6 +8,7 @@ public interface Interfaccia {
 	public TreeMap<Integer, Vector<LocalDateTime>> stampaOrari(Medico m);
 	public TreeMap<Integer, Vector<LocalDateTime>> stampaAppuntamenti(int ID);
 	public String stampaPazienti();
-	public Vector<Appuntamento> stampaNumAppuntamenti(LocalDate inizio, LocalDate fine);
+	public Vector<Appuntamento> stampaAppuntamenti(LocalDate inizio, LocalDate fine);
+	public String stampaNumAppuntamenti(int matricola);
 	public void getTime();
 }
