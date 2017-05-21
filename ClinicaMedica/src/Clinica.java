@@ -59,9 +59,29 @@ public class Clinica implements Interfaccia{
 	 * @return Vero se c'è la disponibilità da parte del medico, falso altrimenti
 	 */
 	
-	public boolean controllaAppuntamento(Medico m, LocalDateTime inizio, LocalDateTime fine){
-		return false;
-	}
+	/*public boolean controllaAppuntamento(Medico m, LocalDateTime inizio, LocalDateTime fine){
+		boolean isDoctorExists = false;
+		for(Medico medico : listaMedici){
+			if(medico.equals(m)){
+				isDoctorExists = true;
+				break;
+			}
+		}
+		
+		if(!isDoctorExists)
+			return false;
+		Vector<Appuntamento> listaAppuntamentiMedico = m.getOrarioAppuntamenti()
+				.get(inizio.getYear() + inizio.getMonth().getValue() + inizio.getDayOfMonth());
+		
+		for(Appuntamento appuntamento : listaAppuntamentiMedico){
+			if(Util.checkifOccupied(appuntamento.getInizio(), appuntamento.getFine(), inizio, fine)){
+				System.out.println("Occupato!");
+				return false;
+			}
+		} 
+		
+		return true;
+	}*/
 	
 	/**
 	 * Metodo che restituisce tutti gli appuntamenti di un dato giorno.

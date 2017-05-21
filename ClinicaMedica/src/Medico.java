@@ -11,12 +11,12 @@ public class Medico {
 	private LocalDate annoLaurea;
 	private LocalDate annoAssunzione;
 	private Vector<Appuntamento> appuntamenti;
-	private TreeMap<Integer, Vector<Appuntamento>> orariAppuntamenti;
+	public TreeMap<Integer, Vector<Appuntamento>> orariAppuntamenti;
 	//private Vector<LocalDateTime> fissi;
 	private TreeMap<Integer, Vector<LocalDateTime>> orariFissi;
 	
 	public Medico(){
-		
+		orariAppuntamenti = new TreeMap<Integer, Vector<Appuntamento>>();
 	}
 	
 	public Medico(String nome, String cognome, LocalDate annoLaurea, LocalDate annoAssunzione){
