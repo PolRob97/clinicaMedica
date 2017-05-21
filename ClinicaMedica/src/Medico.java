@@ -1,7 +1,8 @@
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
+
 
 /**
  * Classe che rappresenta il concetto di medico. 
@@ -13,16 +14,17 @@ public class Medico {
 	private String nome;
 	private String cognome;
 	private int ID;
-	private LocalDate annoLaurea;
-	private LocalDate annoAssunzione;
-	public TreeMap<Integer, Vector<Appuntamento>> orariAppuntamenti;
-	private TreeMap<Integer, Vector<LocalDateTime>> orariFissi;
+	private int annoLaurea;
+	private int annoAssunzione;
+	private TreeMap<Integer, Vector<Appuntamento>> orariAppuntamenti;
+	private TreeMap<Integer, Vector<LocalTime>> orariFissi;
 	
 	/**
 	 * Costruttore vuoto della classe medico.
 	 */
 	
 	public Medico(){
+		orariFissi = new TreeMap<Integer, Vector<LocalTime>>();
 		orariAppuntamenti = new TreeMap<Integer, Vector<Appuntamento>>();
 	}
 	
@@ -34,13 +36,14 @@ public class Medico {
 	 * @param annoAssunzione Anno assunzione del medico
 	 */
 	
-	public Medico(String nome, String cognome, LocalDate annoLaurea, LocalDate annoAssunzione){
+	public Medico(String nome, String cognome, int annoLaurea, int annoAssunzione, TreeMap<Integer, 
+			Vector<Appuntamento>> orariAppuntamenti, TreeMap<Integer, Vector<LocalTime>> orariFissi){
 		this.nome = nome;
 		this.cognome = cognome;
 		this.annoLaurea = annoLaurea;
 		this.annoAssunzione = annoAssunzione;
-		this.orariAppuntamenti = new TreeMap<Integer, Vector<Appuntamento>>();
-		this.orariFissi = new TreeMap<Integer, Vector<LocalDateTime>>();
+		this.orariAppuntamenti = orariAppuntamenti;
+		this.orariFissi = orariFissi;
 	}
 	
 	/**
@@ -75,7 +78,7 @@ public class Medico {
 	 * @param giorno Data di laurea
 	 */
 	
-	public void setLaurea(LocalDate giorno){
+	public void setLaurea(int giorno){
 		this.annoLaurea = giorno;
 	}
 	
@@ -84,8 +87,17 @@ public class Medico {
 	 * @param assunzione Data di assunzione
 	 */
 	
-	public void setAssunzione(LocalDate assunzione){
+	public void setAssunzione(int assunzione){
 		this.annoAssunzione = assunzione;
+	}
+	
+	/**
+	 * Metodo che permette di impostare gli orari lavorativi del medico.
+	 * @param orariFissi Orari lavorativi da impostare.
+	 */
+	
+	public void setOrariFissi(TreeMap<Integer, Vector<LocalTime>> orariFissi){
+		this.orariFissi = orariFissi;
 	}
 	
 	/**
@@ -120,7 +132,7 @@ public class Medico {
 	 * @return Anno di laurea.
 	 */
 	
-	public LocalDate getAnnoLaurea(){
+	public int getAnnoLaurea(){
 		return annoLaurea;
 	}
 	
@@ -129,7 +141,7 @@ public class Medico {
 	 * @return Anno di assunzione
 	 */
 	
-	public LocalDate getAnnoAssunzione(){
+	public int getAnnoAssunzione(){
 		return annoAssunzione;
 	}
 	
@@ -147,7 +159,7 @@ public class Medico {
 	 * @return Orari lavorativi
 	 */
 	
-	public TreeMap<Integer, Vector<LocalDateTime>> getOrariFissi(){
+	public TreeMap<Integer, Vector<LocalTime>> getOrariFissi(){
 		return orariFissi;
 	}
 	
@@ -183,5 +195,29 @@ public class Medico {
 		return false;
 	}
 	
+	/**
+	 * Metodo che dovrebbe riordinare ogni Vector di Appuntamenti presente all'interno della TreeMap attraverso
+	 * un algoritmo di Bubble-Sort. In ogni caso non è funzionante poichè ad ogni richiamo della funzione il 
+	 * Vector rimane ordinato in base all'inserimento degli elementi...
+	 */
 	
+	public void getAppuntamentiTemporale(){
+		Iterator<Vector<Appuntamento>> iterator = orariAppuntamenti.values().iterator();
+		while(iterator.hasNext()){
+			Vector<Appuntamento> appuntamenti = iterator.next();
+			for(int i = 0; i < appuntamenti.size(); i++){
+				boolean lettura = false;
+				for(int j = 0; j < appuntamenti.size() - 1; j++){
+					if(appuntamenti.get(j).getInizio().isAfter(appuntamenti.get(j + 1).getInizio())){
+						Appuntamento apTemp = appuntamenti.get(j);
+						appuntamenti.set(j, appuntamenti.get(j + 1));
+						appuntamenti.set(j + 1, apTemp);
+						lettura = true;
+					}
+				}
+				if(!lettura)
+					break;
+			}
+		}
+	}
 }

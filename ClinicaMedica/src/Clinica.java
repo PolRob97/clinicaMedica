@@ -1,9 +1,7 @@
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -14,7 +12,7 @@ import java.util.Vector;
  * @version 0.1
  */
 
-public class Clinica implements Interfaccia{
+public class Clinica implements Interfaccia {
 	private String nomeClinica;
 	private Vector<Double> tempi;
 	private Vector<Medico> listaMedici;
@@ -25,6 +23,13 @@ public class Clinica implements Interfaccia{
 	private final static String INITIAL_TIME = "Tempo iniziale: ";
 	private final static String DELAY_INFO = "Il delay dal tempo %d al tempo %d è: ";
 	private final static String APPOINTMENT_DOCTOR = "Il numero di appuntamenti del medico %s sono %d: ";
+	
+	/**
+	 * Costruttore con parametri della classe Clinica.
+	 * @param nomeClinica Nome associato alla clinica
+	 * @param listaPazienti Lista dei pazienti
+	 * @param listaMedici Lista dei medici che lavorano alla clinica
+	 */
 	
 	public Clinica(String nomeClinica, Vector <Paziente> listaPazienti, Vector<Medico> listaMedici){
 		this.nomeClinica = nomeClinica;
@@ -69,7 +74,6 @@ public class Clinica implements Interfaccia{
 	
 	public boolean controllaAppuntamento(Medico m, Appuntamento ap){
 		boolean isDoctorExists = false;
-		
 		for(Medico medico : listaMedici){
 			if(medico.equals(m)){
 				isDoctorExists = true;
@@ -81,18 +85,27 @@ public class Clinica implements Interfaccia{
 			return false;
 		
 		Vector<Appuntamento> listaAppuntamentiMedico = m.getOrariAppuntamenti()
-				.get(ap.getInizio().getYear() + ap.getInizio().getMonth().getValue() + ap.getInizio().getDayOfMonth());
+				.get(ap.getInizio().getYear() + ap.getInizio().getMonthValue() + ap.getInizio().getDayOfMonth());
 		
-		for(Appuntamento appuntamento : listaAppuntamentiMedico){
-			if(ap.getInizio().isBefore(appuntamento.getInizio()) && ap.getFine().isBefore(appuntamento.getInizio())
-					|| ap.getInizio().isAfter(appuntamento.getFine()) && ap.getFine().isAfter(appuntamento.getFine())){
-				System.out.println("Libero!");
-				m.getOrariAppuntamenti().get(ap.getInizio().getYear() + ap.getInizio().getMonthValue() + ap.getInizio().getDayOfMonth()).add(ap);
-				return true;
-			}
-		} 
+		if(listaAppuntamentiMedico != null && !listaAppuntamentiMedico.isEmpty()){
+			
+			for(Appuntamento appuntamento : listaAppuntamentiMedico){
+				
+				if((ap.getInizio().isBefore(appuntamento.getInizio()) && ap.getFine().isBefore(appuntamento.getInizio()))
+						|| (ap.getInizio().isAfter(appuntamento.getFine()) && ap.getFine().isAfter(appuntamento.getFine()))){
+				}
+				else
+					return false;
+			} 
 		
-		return false;
+		}else{
+			Vector<Appuntamento> appuntamento = new Vector<>();
+			appuntamento.add(ap);
+			m.getOrariAppuntamenti().put(ap.getInizio().getYear() + ap.getInizio().getMonthValue() + ap.getInizio().getDayOfMonth(), appuntamento);
+			return true;
+		}
+		m.getOrariAppuntamenti().get(ap.getInizio().getYear() + ap.getInizio().getMonthValue() + ap.getInizio().getDayOfMonth()).add(ap);
+		return true;
 	}
 	
 	/**
@@ -100,12 +113,12 @@ public class Clinica implements Interfaccia{
 	 * @return Lista di tutti gli orari di tutti i medici.
 	 */
 	
-	public Vector<LocalDateTime> stampaOrariMedici(){
-		Vector<LocalDateTime> orariTotali = new Vector<LocalDateTime>();
+	public Vector<LocalTime> stampaOrariMedici(){
+		Vector<LocalTime> orariTotali = new Vector<LocalTime>();
 		for(Medico medico: listaMedici){
-			Iterator<Vector<LocalDateTime>> iterator = medico.getOrariFissi().values().iterator();
+			Iterator<Vector<LocalTime>> iterator = medico.getOrariFissi().values().iterator();
 			while(iterator.hasNext()){
-				for(LocalDateTime data: iterator.next()){
+				for(LocalTime data: iterator.next()){
 					orariTotali.add(data);
 				}
 			}
@@ -114,7 +127,6 @@ public class Clinica implements Interfaccia{
 		return orariTotali;
 	}
 
-	
 	/**
 	 * Metodo toString per la rappresentazione visuale dello stato della clinica.
 	 * @return Stato della clinica
@@ -135,7 +147,7 @@ public class Clinica implements Interfaccia{
 		sb.append(LISTA_MEDICI_INFO).append("\n");
 		
 		for(Medico medico : listaMedici){
-			sb.append(medico.toString() + "\n");
+			sb.append(medico.toString()).append("\n");
 		}
 		return sb.toString();
 	}
@@ -147,7 +159,7 @@ public class Clinica implements Interfaccia{
 	 */
 	
 	@Override
-	public TreeMap<Integer, Vector<LocalDateTime>> stampaOrari(Medico m) {
+	public TreeMap<Integer, Vector<LocalTime>> stampaOrari(Medico m) {
 		for(Medico medico : listaMedici){
 			if(m.equals(medico)){
 				return m.getOrariFissi();
@@ -188,7 +200,6 @@ public class Clinica implements Interfaccia{
 		return sb.toString();
 	}
 
-	
 	/**
 	 * Metodo che permette di stampare il delay tra un'attività della clinica e l'altra.
 	 * Deve tenere informato l'utente anche delle attività precedenti effettuate e 
@@ -246,5 +257,34 @@ public class Clinica implements Interfaccia{
 			}
 		}
 		return String.format(APPOINTMENT_DOCTOR, cognomeMedico, numeroAppuntamenti);
+	}
+	
+	/**
+	 * Metodo che permette di stampare la lista dei pazienti con almeno un appuntamento prenotato
+	 * e raggruppandoli per numero di appuntamenti futuri, mantenendone l'ordine di vicinanza.
+	 * @return Lista dei pazienti
+	 */
+	
+	public TreeMap<Integer,Vector<Paziente>> stampaPazientiPerAppuntamento(){
+		Vector<Paziente> listaPazientiTemporanea = new Vector<>(); 
+		TreeMap<Integer, Vector<Paziente>> mapPazienti = new TreeMap <Integer, Vector<Paziente>>(); 
+		
+		for(Paziente paziente : listaPazienti){
+			if(!paziente.getStoriaAppuntamenti().isEmpty()){ 
+				  if(mapPazienti.containsKey(paziente.getStoriaAppuntamenti().size())){ 
+					  listaPazientiTemporanea = mapPazienti.get(paziente.getStoriaAppuntamenti().size());
+					  listaPazientiTemporanea.add(paziente);
+					  mapPazienti.put(paziente.getStoriaAppuntamenti().size(), listaPazientiTemporanea);
+				  }
+				  else{
+					  if(listaPazientiTemporanea == null)
+						  listaPazientiTemporanea = new Vector<>();
+					  listaPazientiTemporanea.add(paziente);
+					  mapPazienti.put(paziente.getStoriaAppuntamenti().size(), listaPazientiTemporanea);
+				  }
+			 }
+			 listaPazientiTemporanea = null; 
+		}
+		return mapPazienti;
 	}
 }

@@ -12,12 +12,15 @@ public class Paziente {
     private String cognome;
     private Vector<Appuntamento> storiaAppuntamenti;
     
+    private final static String APPOINTMENT_SUCCESS = "Appuntamento preso con successo.";
+    private final static String APPOINTMENT_FAILED = "Appuntamento fallito. Riprova in un altro periodo.";
+    
     /**
      * Costruttore vuoto della classe Paziente. 
      */
     
     public Paziente (){
-	
+    	storiaAppuntamenti = new Vector<>();
     }
     
     /**
@@ -63,6 +66,7 @@ public class Paziente {
      * Metodo che permette di impostare il cognome del paziente.
      * @param cognome Cognome da impostare del paziente
      */
+    
     public void setCognome(String cognome){
         this.cognome = cognome;
     }
@@ -86,13 +90,18 @@ public class Paziente {
      */
     
     public void prendiAppuntamento(Clinica clinica, Medico medico, Appuntamento appuntamento){
-    	if(clinica.controllaAppuntamento(medico, appuntamento))
+    	if(clinica.controllaAppuntamento(medico, appuntamento)){
     		storiaAppuntamenti.add(appuntamento);
+    		System.out.println(APPOINTMENT_SUCCESS);
+    	}else{
+    		System.out.println(APPOINTMENT_FAILED);
+    	}
     }
     
     /**
      * Metodo toString della classe paziente che restituisce le principali informazioni
      * riguardo ad esso.
+     * @return Principali informazioni sul paziente
      */
     
     public String toString(){
